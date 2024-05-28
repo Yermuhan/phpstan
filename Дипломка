@@ -1,0 +1,59 @@
+unit mylib;
+Interface
+type
+mas  = array[1..2000] of integer;
+function SubChar(s:string):string;
+function encode(key:string;c:string;decode:boolean):string;
+procedure Rand(var Arr:mas;var rmax,ksl:integer);
+ implementation
+ uses SysUtils;
+function SubChar(s:string):string;
+var sts,ens:integer;
+    subs:string;
+begin
+  if (pos('[/',s)>0)and(pos('/]',s)>0) then
+   while (pos('[/',s)>0)and(pos('/]',s)>0) do
+    begin
+      sts:=pos('[/',s);
+      ens:=pos('/]',s);
+      subs:=copy(s,sts+2,(ens-sts)-2);
+      delete(s,sts,(ens-sts)+2);
+      insert(chr(strtoint(subs)),s,sts);
+end;
+    SubChar:=s;
+end;
+function encode(key:string;c:string;decode:boolean):string;
+var stt:string;
+    o,p:longint;
+73
+
+     ch:char;
+begin
+stt:='';
+p:=1;
+for o:=1 to length(c) do
+ begin
+  ch:=chr(ord(c[o])xor ord(key[p]));
+  if ord(ch)<32 then
+   begin
+    if not decode then stt:=stt+'[/'+inttostr(ord(ch))+'/]' else stt:=stt+ch
+   end else stt:=stt+ch;
+  p:=p+1;
+  if p>length(key) then p:=1;
+ end;
+encode:=stt;
+end;
+procedure Rand(var Arr:mas;var rmax,ksl:integer);
+label out;
+var
+   i,j,n:integer;
+begin
+ for i:=1 to 2000 do Arr[i]:=0;
+ randomize;
+ for i:=1 to rmax do
+begin out:
+   n:=random(ksl)+1;
+   for j:=1 to rmax do if Arr[j]=n then goto out;
+   Arr[i]:=n;
+end; end;
+end.
